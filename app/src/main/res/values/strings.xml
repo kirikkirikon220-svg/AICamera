@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">AI Camera</string>
+
+    <string name="photo">Фото</string>
+    <string name="video">Видео</string>
+    <string name="portrait">Портрет</string>
+
+    <string name="settings">Настройки</string>
+    <string name="flash">Вспышка</string>
+    <string name="gallery">Галерея</string>
+    <string name="switch_camera">Сменить камеру</string>
+    <string name="capture">Сделать фото</string>
+
+    <string name="hdr">HDR</string>
+    <string name="ai">AI</string>
+
+    <string name="resolution">12 MP</string>
+
 </resources>
