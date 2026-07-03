@@ -3,6 +3,8 @@ package com.aicamera
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.content.ContentValues
+import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,7 +18,8 @@ import androidx.core.content.ContextCompat
 class MainActivity : AppCompatActivity() {
 
     private lateinit var previewView: PreviewView
-
+    private lateinit var imageCapture: ImageCapture
+    private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private lateinit var btnCapture: ImageButton
     private lateinit var btnGallery: ImageButton
     private lateinit var btnSwitchCamera: ImageButton
@@ -40,10 +43,11 @@ class MainActivity : AppCompatActivity() {
         btnGallery = findViewById(R.id.btnGallery)
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
-        btnSettings = findViewById(R.id.btnSettings)
+        bSettings = findViewById(R.id.btnSettings)
 
+            
         btnCapture.setOnClickListener {
-            Toast.makeText(this, "Фото (скоро)", Toast.LENGTH_SHORT).show()
+            takePhoto()
         }
 
         btnGallery.setOnClickListener {
@@ -82,16 +86,66 @@ class MainActivity : AppCompatActivity() {
 
             val preview = Preview.Builder().build()
 
-            preview.surfaceProvider = previewView.surfaceProvider
+preview.surfaceProvider = previewView.surfaceProvider
 
-            cameraProvider.unbindAll()
+imageCapture = ImageCapture.Builder()
+    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+    .build()
 
-            cameraProvider.bindToLifecycle(
-                this,
-                CameraSelector.DEFAULT_BACK_CAMERA,
-                preview
-            )
+cameraProvider.unbindAll()
 
-        }, ContextCompat.getMainExecutor(this))
+cameraProvider.bindToLifecycle(
+    this,
+    cameraSelector,
+    preview,
+    imageCapture
+)
+
+       }, ContextCompat.getMainExecutor(this))
+    }
+
+    private fun takePhoto() {
+
+        val name = "AI_${System.currentTimeMillis()}.jpg"
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AICamera")
+            }
+        }
+
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(
+            contentResolver,
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            contentValues
+        ).build()
+
+        imageCapture.takePicture(
+            outputOptions,
+            ContextCompat.getMainExecutor(this),
+            object : ImageCapture.OnImageSavedCallback {
+
+                override fun onImageSaved(
+                    outputFileResults: ImageCapture.OutputFileResults
+                ) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Фото сохранено",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                override fun onError(exception: ImageCaptureException) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Ошибка: ${exception.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        )
     }
 }
