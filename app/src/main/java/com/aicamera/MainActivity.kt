@@ -68,13 +68,38 @@ class MainActivity : AppCompatActivity() {
         override fun onSensorChanged(event: SensorEvent) {
 
             val x = event.values[0]
+            val y = event.values[1]
 
-            horizonLine.rotation = -x * 5f
+            val angle = Math.toDegrees(
+                kotlin.math.atan2(x.toDouble(), y.toDouble())
+            ).toFloat()
 
-            if (kotlin.math.abs(x) < 0.5f) {
-                horizonLine.visibility = View.VISIBLE
+            horizonLine.animate().rotation(-angle).setDuration(80).start()
+
+            if (kotlin.math.abs(angle) < 15f) {
+
+                if (horizonLine.visibility != View.VISIBLE) {
+                    horizonLine.alpha = 0f
+                    horizonLine.visibility = View.VISIBLE
+                    horizonLine.animate().alpha(1f).setDuration(150).start()
+                }
+
+                if (kotlin.math.abs(angle) < 1f) {
+                    horizonLine.setBackgroundColor(android.graphics.Color.parseColor("#FFD54F"))
+                } else {
+                    horizonLine.setBackgroundColor(android.graphics.Color.WHITE)
+                }
+
             } else {
-                horizonLine.visibility = View.GONE
+                if (horizonLine.visibility == View.VISIBLE) {
+                    horizonLine.animate()
+                        .alpha(0f)
+                        .setDuration(150)
+                        .withEndAction {
+                            horizonLine.visibility = View.GONE
+                        }
+                        .start()
+                }
             }
         }
 
