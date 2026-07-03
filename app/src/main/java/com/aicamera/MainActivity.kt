@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.camera.core.Camera
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageCapture: ImageCapture
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+    private var camera: Camera? = null
 
     private lateinit var btnCapture: ImageButton
     private lateinit var btnGallery: ImageButton
@@ -72,7 +74,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnFlash.setOnClickListener {
-            Toast.makeText(this, "Вспышка (скоро)", Toast.LENGTH_SHORT).show()
+
+            camera?.cameraInfo?.let { info ->
+
+                val enabled = info.torchState.value == 1
+
+                camera?.cameraControl?.enableTorch(!enabled)
+
+                Toast.makeText(
+                    this,
+                    if (!enabled) "Вспышка включена" else "Вспышка выключена",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         btnSettings.setOnClickListener {
@@ -108,7 +122,7 @@ class MainActivity : AppCompatActivity() {
 
             cameraProvider.unbindAll()
 
-            cameraProvider.bindToLifecycle(
+            camera = cameraProvider.bindToLifecycle(
                 this,
                 cameraSelector,
                 preview,
