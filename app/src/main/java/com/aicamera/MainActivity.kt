@@ -189,6 +189,16 @@ class MainActivity : AppCompatActivity() {
             focusRing.x = event.x - focusRing.width / 2f
             focusRing.y = event.y - focusRing.height / 2f
             focusRing.visibility = android.view.View.VISIBLE
+            focusRing.scaleX = 1.5f
+            focusRing.scaleY = 1.5f
+            focusRing.alpha = 0f
+
+            focusRing.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .alpha(1f)
+                .setDuration(180)
+                .start()
 
             val factory = SurfaceOrientedMeteringPointFactory(
                 view.width.toFloat(),
@@ -209,6 +219,10 @@ class MainActivity : AppCompatActivity() {
             val action = builder.build()
 
             camera?.cameraControl?.startFocusAndMetering(action)
+
+            focusRing.postDelayed({
+                focusRing.visibility = android.view.View.GONE
+            }, 800)
             }
 
             if (event.action == android.view.MotionEvent.ACTION_UP) {
