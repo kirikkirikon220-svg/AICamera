@@ -245,10 +245,7 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-        previewView.setOnTouchListener { _, event ->
-            scaleGestureDetector.onTouchEvent(event)
-            true
-        }
+        // Zoom уже обрабатывается в основном OnTouchListener
 
         if (ContextCompat.checkSelfPermission(
                 this,
