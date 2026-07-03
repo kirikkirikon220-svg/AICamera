@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
     private var isRecording = false
-                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -252,7 +251,6 @@ class MainActivity : AppCompatActivity() {
             recording?.stop()
             recording = null
             isRecording = false
-                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
             return
         }
 
@@ -307,7 +305,6 @@ class MainActivity : AppCompatActivity() {
                 is VideoRecordEvent.Finalize -> {
 
                     isRecording = false
-                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
                     recording = null
 
                     Toast.makeText(
