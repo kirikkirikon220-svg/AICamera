@@ -51,6 +51,29 @@ class MainActivity : AppCompatActivity() {
     private var isRecording = false
     private var focusLocked = false
     private var gridEnabled = false
+
+    private lateinit var sensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+
+
+    private val horizonListener = object : SensorEventListener {
+
+        override fun onSensorChanged(event: SensorEvent) {
+
+            val x = event.values[0]
+
+            horizonLine.rotation = -x * 5f
+
+            if (kotlin.math.abs(x) < 0.5f) {
+                horizonLine.visibility = View.VISIBLE
+            } else {
+                horizonLine.visibility = View.GONE
+            }
+        }
+
+        override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    }
+
     private var downTime = 0L
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -73,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtTimer: TextView
     private lateinit var recordDot: TextView
     private lateinit var focusRing: android.view.View
+    private lateinit var horizonLine: android.view.View
     private lateinit var gridV1: android.view.View
     private lateinit var gridV2: android.view.View
     private lateinit var gridH1: android.view.View
@@ -107,6 +131,9 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+
         supportActionBar?.hide()
         setContentView(R.layout.activity_main)
 
@@ -127,6 +154,7 @@ class MainActivity : AppCompatActivity() {
         txtTimer = findViewById(R.id.txtTimer)
         recordDot = findViewById(R.id.recordDot)
         focusRing = findViewById(R.id.focusRing)
+        horizonLine = findViewById(R.id.horizonLine)
 
         gridV1 = findViewById(R.id.gridV1)
         gridV2 = findViewById(R.id.gridV2)
@@ -533,3 +561,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 }
+
+    override fun onResume() {
+        super.onResume()
+
+        accelerometer?.let {
+            sensorManager.registerListener(
+                horizonListener,
+                it,
+                SensorManager.SENSOR_DELAY_UI
+            )
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        sensorManager.unregisterListener(horizonListener)
+    }

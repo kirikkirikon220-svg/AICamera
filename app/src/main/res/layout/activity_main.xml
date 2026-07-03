@@ -123,6 +123,18 @@
         app:layout_constraintBottom_toBottomOf="@id/guideH2"/>
 
 
+    
+    <View
+        android:id="@+id/horizonLine"
+        android:layout_width="180dp"
+        android:layout_height="3dp"
+        android:background="#FFD54F"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/previewView"
+        app:layout_constraintBottom_toBottomOf="@id/previewView"
+        app:layout_constraintStart_toStartOf="@id/previewView"
+        app:layout_constraintEnd_toEndOf="@id/previewView"/>
+
     <View
         android:id="@+id/focusRing"
         android:layout_width="70dp"
