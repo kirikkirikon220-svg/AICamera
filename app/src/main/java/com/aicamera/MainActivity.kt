@@ -171,6 +171,31 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        scaleGestureDetector = ScaleGestureDetector(this,
+            object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+
+                    camera?.cameraInfo?.zoomState?.value?.let { zoom ->
+
+                        val value =
+                            (zoom.zoomRatio * detector.scaleFactor)
+                                .coerceIn(
+                                    zoom.minZoomRatio,
+                                    zoom.maxZoomRatio
+                                )
+
+                        camera?.cameraControl?.setZoomRatio(value)
+                    }
+
+                    return true
+                }
+            })
+
+        previewView.setOnTouchListener { _, event ->
+            scaleGestureDetector.onTouchEvent(event)
+            true
+        }
+
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
