@@ -86,6 +86,7 @@ class MainActivity : AppCompatActivity() {
 
     private var videoMode = false
     private var captureDelay = 0
+    private val timerValues = listOf(0, 3, 5, 10)
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
