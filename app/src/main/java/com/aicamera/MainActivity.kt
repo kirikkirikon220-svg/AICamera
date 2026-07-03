@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
     private var isRecording = false
+                    recordDot.visibility = android.view.View.GONE
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -269,6 +270,7 @@ class MainActivity : AppCompatActivity() {
             recording?.stop()
             recording = null
             isRecording = false
+                    recordDot.visibility = android.view.View.GONE
             return
         }
 
@@ -317,6 +319,7 @@ class MainActivity : AppCompatActivity() {
 
                 is VideoRecordEvent.Start -> {
                     isRecording = true
+                    recordDot.visibility = android.view.View.VISIBLE
                     seconds = 0
                     txtTimer.visibility = android.view.View.VISIBLE
                     timerHandler.post(timerRunnable)
@@ -326,6 +329,7 @@ class MainActivity : AppCompatActivity() {
                 is VideoRecordEvent.Finalize -> {
 
                     isRecording = false
+                    recordDot.visibility = android.view.View.GONE
                     recording = null
 
                     Toast.makeText(
