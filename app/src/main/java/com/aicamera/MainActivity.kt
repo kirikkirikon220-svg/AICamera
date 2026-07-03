@@ -23,6 +23,9 @@ import androidx.camera.core.Preview
 import androidx.camera.core.FocusMeteringAction
 import androidx.camera.core.SurfaceOrientedMeteringPointFactory
 import java.util.concurrent.TimeUnit
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.video.FileOutputOptions
@@ -331,7 +334,13 @@ class MainActivity : AppCompatActivity() {
     }
     private fun takePhoto() {
 
-        val name = "AI_${System.currentTimeMillis()}.jpg"
+        val name =
+            "AICamera_${
+                SimpleDateFormat(
+                    "yyyy-MM-dd_HH-mm-ss",
+                    Locale.getDefault()
+                ).format(Date())
+            }.jpg"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
@@ -392,7 +401,13 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val name = "VID_${System.currentTimeMillis()}"
+        val name =
+            "AICamera_${
+                SimpleDateFormat(
+                    "yyyy-MM-dd_HH-mm-ss",
+                    Locale.getDefault()
+                ).format(Date())
+            }"
 
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
@@ -413,6 +428,9 @@ class MainActivity : AppCompatActivity() {
             )
                 .setContentValues(contentValues)
                 .build()
+
+        videoCapture.targetRotation =
+            previewView.display.rotation
 
         var pendingRecording =
             videoCapture.output.prepareRecording(
