@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity() {
     private var recording: Recording? = null
     private var isRecording = false
     private var focusLocked = false
+    private var gridEnabled = false
     private var downTime = 0L
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -72,6 +73,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var txtTimer: TextView
     private lateinit var recordDot: TextView
     private lateinit var focusRing: android.view.View
+    private lateinit var gridV1: android.view.View
+    private lateinit var gridV2: android.view.View
+    private lateinit var gridH1: android.view.View
+    private lateinit var gridH2: android.view.View
 
     private val timerHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var seconds = 0
@@ -122,6 +127,11 @@ class MainActivity : AppCompatActivity() {
         txtTimer = findViewById(R.id.txtTimer)
         recordDot = findViewById(R.id.recordDot)
         focusRing = findViewById(R.id.focusRing)
+
+        gridV1 = findViewById(R.id.gridV1)
+        gridV2 = findViewById(R.id.gridV2)
+        gridH1 = findViewById(R.id.gridH1)
+        gridH2 = findViewById(R.id.gridH2)
         recordDot.visibility = android.view.View.GONE
         txtTimer.visibility = android.view.View.GONE
 
@@ -247,7 +257,26 @@ class MainActivity : AppCompatActivity() {
 
 
         btnSettings.setOnClickListener {
-            Toast.makeText(this, "Настройки (скоро)", Toast.LENGTH_SHORT).show()
+
+            gridEnabled = !gridEnabled
+
+            val state =
+                if (gridEnabled)
+                    android.view.View.VISIBLE
+                else
+                    android.view.View.GONE
+
+            gridV1.visibility = state
+            gridV2.visibility = state
+            gridH1.visibility = state
+            gridH2.visibility = state
+
+            Toast.makeText(
+                this,
+                if (gridEnabled) "Сетка включена"
+                else "Сетка выключена",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
         zoom05.setOnClickListener {
