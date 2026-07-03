@@ -39,8 +39,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
     private var isRecording = false
-                    timerHandler.removeCallbacks(timerRunnable)
-                    txtTimer.visibility = android.view.View.GONE
                     txtTimer.text = "00:00" 
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
@@ -269,8 +267,6 @@ class MainActivity : AppCompatActivity() {
             recording?.stop()
             recording = null
             isRecording = false
-                    timerHandler.removeCallbacks(timerRunnable)
-                    txtTimer.visibility = android.view.View.GONE
                     txtTimer.text = "00:00" 
             return
         }
@@ -322,7 +318,6 @@ class MainActivity : AppCompatActivity() {
                     isRecording = true
                     seconds = 0
                     txtTimer.visibility = android.view.View.VISIBLE
-                    txtTimer.text = "00:00"
                     timerHandler.post(timerRunnable)
                     btnCapture.setImageResource(android.R.drawable.presence_video_online)
                 }
@@ -330,8 +325,6 @@ class MainActivity : AppCompatActivity() {
                 is VideoRecordEvent.Finalize -> {
 
                     isRecording = false
-                    timerHandler.removeCallbacks(timerRunnable)
-                    txtTimer.visibility = android.view.View.GONE
                     txtTimer.text = "00:00" 
                     recording = null
 
