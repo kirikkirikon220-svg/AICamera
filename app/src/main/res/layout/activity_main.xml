@@ -7,6 +7,21 @@
     android:layout_height="match_parent"
     android:background="@color/cameraBackground">
 
+    
+        <TextView
+            android:id="@+id/txtTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="18dp"/>
+
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="0dp"

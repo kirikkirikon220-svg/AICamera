@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
     private var isRecording = false
+                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -51,6 +52,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var modePhoto: TextView
     private lateinit var modeVideo: TextView
+    private lateinit var txtTimer: TextView
 
     private var videoMode = false
 
@@ -77,6 +79,8 @@ class MainActivity : AppCompatActivity() {
 
         modePhoto = findViewById(R.id.modePhoto)
         modeVideo = findViewById(R.id.modeVideo)
+        txtTimer = findViewById(R.id.txtTimer)
+        txtTimer.visibility = android.view.View.GONE
 
         btnCapture.setOnClickListener {
 
@@ -248,6 +252,7 @@ class MainActivity : AppCompatActivity() {
             recording?.stop()
             recording = null
             isRecording = false
+                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
             return
         }
 
@@ -296,11 +301,13 @@ class MainActivity : AppCompatActivity() {
 
                 is VideoRecordEvent.Start -> {
                     isRecording = true
+                    btnCapture.setImageResource(android.R.drawable.presence_video_online)
                 }
 
                 is VideoRecordEvent.Finalize -> {
 
                     isRecording = false
+                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
                     recording = null
 
                     Toast.makeText(
