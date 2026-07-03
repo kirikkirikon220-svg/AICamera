@@ -12,6 +12,7 @@ import android.widget.Toast
 import android.view.ScaleGestureDetector
 import android.view.MotionEvent
 import android.widget.TextView
+import android.widget.Button
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.Camera
@@ -52,6 +53,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSwitchCamera: ImageButton
     private lateinit var btnFlash: ImageButton
     private lateinit var btnSettings: ImageButton
+
+    private lateinit var zoom05: Button
+    private lateinit var zoom1: Button
+    private lateinit var zoom2: Button
 
     private lateinit var modePhoto: TextView
     private lateinit var modeVideo: TextView
@@ -95,6 +100,10 @@ class MainActivity : AppCompatActivity() {
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
         btnSettings = findViewById(R.id.btnSettings)
+
+        zoom05 = findViewById(R.id.zoom05)
+        zoom1 = findViewById(R.id.zoom1)
+        zoom2 = findViewById(R.id.zoom2)
 
         modePhoto = findViewById(R.id.modePhoto)
         modeVideo = findViewById(R.id.modeVideo)
