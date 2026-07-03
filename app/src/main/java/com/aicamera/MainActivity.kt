@@ -47,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     private var recording: Recording? = null
     private var isRecording = false
     private var focusLocked = false
+    private var downTime = 0L
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
