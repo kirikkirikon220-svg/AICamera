@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var modeVideo: TextView
     private lateinit var txtTimer: TextView
     private lateinit var recordDot: TextView
+    private lateinit var focusRing: android.view.View
 
     private val timerHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var seconds = 0
@@ -120,6 +121,7 @@ class MainActivity : AppCompatActivity() {
         modeVideo = findViewById(R.id.modeVideo)
         txtTimer = findViewById(R.id.txtTimer)
         recordDot = findViewById(R.id.recordDot)
+        focusRing = findViewById(R.id.focusRing)
         recordDot.visibility = android.view.View.GONE
         txtTimer.visibility = android.view.View.GONE
 
@@ -183,6 +185,10 @@ class MainActivity : AppCompatActivity() {
             if (event.action == android.view.MotionEvent.ACTION_DOWN) {
 
                 downTime = System.currentTimeMillis()
+
+            focusRing.x = event.x - focusRing.width / 2f
+            focusRing.y = event.y - focusRing.height / 2f
+            focusRing.visibility = android.view.View.VISIBLE
 
             val factory = SurfaceOrientedMeteringPointFactory(
                 view.width.toFloat(),
