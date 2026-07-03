@@ -195,6 +195,23 @@ class MainActivity : AppCompatActivity() {
             camera?.cameraControl?.startFocusAndMetering(action)
             }
 
+            if (event.action == android.view.MotionEvent.ACTION_UP) {
+
+                val holdTime =
+                    System.currentTimeMillis() - downTime
+
+                if (holdTime >= 1000) {
+                    focusLocked = !focusLocked
+
+                    Toast.makeText(
+                        this,
+                        if (focusLocked) "AE/AF Lock включен"
+                        else "AE/AF Lock выключен",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
             true
         }
 
