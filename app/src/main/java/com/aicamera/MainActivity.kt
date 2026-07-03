@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSwitchCamera: ImageButton
     private lateinit var btnFlash: ImageButton
     private lateinit var btnSettings: ImageButton
+    private lateinit var btnTimer: ImageButton
 
     private lateinit var zoom05: Button
     private lateinit var zoom1: Button
@@ -108,6 +109,7 @@ class MainActivity : AppCompatActivity() {
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
         btnSettings = findViewById(R.id.btnSettings)
+        btnTimer = findViewById(R.id.btnTimer)
 
         zoom05 = findViewById(R.id.zoom05)
         zoom1 = findViewById(R.id.zoom1)
@@ -173,6 +175,7 @@ class MainActivity : AppCompatActivity() {
             scaleGestureDetector.onTouchEvent(event)
 
             if (event.pointerCount > 1) {
+                focusLocked = false
                 return@setOnTouchListener true
             }
 
@@ -236,6 +239,28 @@ class MainActivity : AppCompatActivity() {
 
         zoom2.setOnClickListener {
             camera?.cameraControl?.setZoomRatio(2.0f)
+        }
+
+
+        
+
+        btnTimer.setOnClickListener {
+
+            captureDelay = when (captureDelay) {
+                0 -> 3
+                3 -> 5
+                5 -> 10
+                else -> 0
+            }
+
+            Toast.makeText(
+                this,
+                if (captureDelay == 0)
+                    "Таймер выключен"
+                else
+                    "Таймер: ${captureDelay} сек",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
 
