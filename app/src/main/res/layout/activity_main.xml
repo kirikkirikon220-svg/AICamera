@@ -37,6 +37,36 @@
         android:layout_marginEnd="18dp"/>
 
 
+    
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideV1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.333"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideV2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.666"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideH1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.333"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideH2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.666"/>
+
+
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="0dp"
@@ -52,49 +82,45 @@
         android:id="@+id/gridV1"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        android:background="#66FFFFFF"
+        android:background="#40FFFFFF"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="@id/previewView"
         app:layout_constraintBottom_toBottomOf="@id/previewView"
-        app:layout_constraintStart_toStartOf="@id/previewView"
-        app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationX="-105dp"/>
+        app:layout_constraintStart_toStartOf="@id/guideV1"
+        app:layout_constraintEnd_toEndOf="@id/guideV1"/>
 
     <View
         android:id="@+id/gridV2"
         android:layout_width="1dp"
         android:layout_height="0dp"
-        android:background="#66FFFFFF"
+        android:background="#40FFFFFF"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="@id/previewView"
         app:layout_constraintBottom_toBottomOf="@id/previewView"
-        app:layout_constraintStart_toStartOf="@id/previewView"
-        app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationX="105dp"/>
+        app:layout_constraintStart_toStartOf="@id/guideV2"
+        app:layout_constraintEnd_toEndOf="@id/guideV2"/>
 
     <View
         android:id="@+id/gridH1"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#66FFFFFF"
+        android:background="#40FFFFFF"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/previewView"
-        app:layout_constraintBottom_toBottomOf="@id/previewView"
+        app:layout_constraintTop_toTopOf="@id/guideH1"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationY="-160dp"/>
+        app:layout_constraintBottom_toBottomOf="@id/guideH1"/>
 
     <View
         android:id="@+id/gridH2"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="#66FFFFFF"
+        android:background="#40FFFFFF"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="@id/previewView"
-        app:layout_constraintBottom_toBottomOf="@id/previewView"
+        app:layout_constraintTop_toTopOf="@id/guideH2"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationY="160dp"/>
+        app:layout_constraintBottom_toBottomOf="@id/guideH2"/>
 
 
     <View
