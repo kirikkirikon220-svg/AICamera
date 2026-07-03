@@ -1,15 +1,18 @@
 package com.aicamera
 
 import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Bundle
 import android.content.ContentValues
+import android.content.pm.PackageManager
+import android.os.Build
+import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
@@ -19,7 +22,9 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var previewView: PreviewView
     private lateinit var imageCapture: ImageCapture
+
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
     private lateinit var btnCapture: ImageButton
     private lateinit var btnGallery: ImageButton
     private lateinit var btnSwitchCamera: ImageButton
@@ -28,7 +33,9 @@ class MainActivity : AppCompatActivity() {
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-            if (granted) startCamera()
+            if (granted) {
+                startCamera()
+            }
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,9 +50,8 @@ class MainActivity : AppCompatActivity() {
         btnGallery = findViewById(R.id.btnGallery)
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
-        bSettings = findViewById(R.id.btnSettings)
+        btnSettings = findViewById(R.id.btnSettings)
 
-            
         btnCapture.setOnClickListener {
             takePhoto()
         }
@@ -78,6 +84,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun startCamera() {
+
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
         cameraProviderFuture.addListener({
@@ -86,24 +93,23 @@ class MainActivity : AppCompatActivity() {
 
             val preview = Preview.Builder().build()
 
-preview.surfaceProvider = previewView.surfaceProvider
+            imageCapture = ImageCapture.Builder()
+                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                .build()
 
-imageCapture = ImageCapture.Builder()
-    .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
-    .build()
+            preview.surfaceProvider = previewView.surfaceProvider
 
-cameraProvider.unbindAll()
+            cameraProvider.unbindAll()
 
-cameraProvider.bindToLifecycle(
-    this,
-    cameraSelector,
-    preview,
-    imageCapture
-)
+            cameraProvider.bindToLifecycle(
+                this,
+                cameraSelector,
+                preview,
+                imageCapture
+            )
 
-       }, ContextCompat.getMainExecutor(this))
+        }, ContextCompat.getMainExecutor(this))
     }
-
     private fun takePhoto() {
 
         val name = "AI_${System.currentTimeMillis()}.jpg"
@@ -112,8 +118,11 @@ cameraProvider.bindToLifecycle(
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/AICamera")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(
+                    MediaStore.Images.Media.RELATIVE_PATH,
+                    "Pictures/AICamera"
+                )
             }
         }
 
@@ -138,7 +147,9 @@ cameraProvider.bindToLifecycle(
                     ).show()
                 }
 
-                override fun onError(exception: ImageCaptureException) {
+                override fun onError(
+                    exception: ImageCaptureException
+                ) {
                     Toast.makeText(
                         this@MainActivity,
                         "Ошибка: ${exception.message}",
