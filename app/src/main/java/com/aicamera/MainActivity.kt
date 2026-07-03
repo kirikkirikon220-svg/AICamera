@@ -328,6 +328,12 @@ class MainActivity : AppCompatActivity() {
 
                     isRecording = false
                     recording = null
+                    timerHandler.removeCallbacks(timerRunnable)
+                    seconds = 0
+                    txtTimer.text = "00:00"
+                    txtTimer.visibility = android.view.View.GONE
+                    recordDot.visibility = android.view.View.GONE
+                    btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
 
                     Toast.makeText(
                         this,
