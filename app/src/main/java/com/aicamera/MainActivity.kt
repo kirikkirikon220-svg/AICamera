@@ -167,6 +167,12 @@ class MainActivity : AppCompatActivity() {
 
         previewView.setOnTouchListener { view, event ->
 
+            scaleGestureDetector.onTouchEvent(event)
+
+            if (event.pointerCount > 1) {
+                return@setOnTouchListener true
+            }
+
             if (event.action == android.view.MotionEvent.ACTION_DOWN) {
 
             val factory = SurfaceOrientedMeteringPointFactory(
