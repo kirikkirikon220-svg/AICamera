@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.Toast
+import android.view.ScaleGestureDetector
+import android.view.MotionEvent
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -42,6 +44,8 @@ class MainActivity : AppCompatActivity() {
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
+
+    private lateinit var scaleGestureDetector: ScaleGestureDetector
 
     private lateinit var btnCapture: ImageButton
     private lateinit var btnGallery: ImageButton
