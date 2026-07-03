@@ -39,6 +39,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
     private var isRecording = false
+                    timerHandler.removeCallbacks(timerRunnable)
+                    txtTimer.visibility = android.view.View.GONE
+                    txtTimer.text = "00:00" 
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -52,6 +55,21 @@ class MainActivity : AppCompatActivity() {
     private lateinit var modePhoto: TextView
     private lateinit var modeVideo: TextView
     private lateinit var txtTimer: TextView
+
+    private val timerHandler = android.os.Handler(android.os.Looper.getMainLooper())
+    private var seconds = 0
+    private val timerRunnable = object : Runnable {
+        override fun run() {
+            seconds++
+
+            val min = seconds / 60
+            val sec = seconds % 60
+
+            txtTimer.text = String.format("%02d:%02d", min, sec)
+
+            timerHandler.postDelayed(this, 1000)
+        }
+    }
 
     private var videoMode = false
 
@@ -251,6 +269,9 @@ class MainActivity : AppCompatActivity() {
             recording?.stop()
             recording = null
             isRecording = false
+                    timerHandler.removeCallbacks(timerRunnable)
+                    txtTimer.visibility = android.view.View.GONE
+                    txtTimer.text = "00:00" 
             return
         }
 
@@ -299,12 +320,19 @@ class MainActivity : AppCompatActivity() {
 
                 is VideoRecordEvent.Start -> {
                     isRecording = true
+                    seconds = 0
+                    txtTimer.visibility = android.view.View.VISIBLE
+                    txtTimer.text = "00:00"
+                    timerHandler.post(timerRunnable)
                     btnCapture.setImageResource(android.R.drawable.presence_video_online)
                 }
 
                 is VideoRecordEvent.Finalize -> {
 
                     isRecording = false
+                    timerHandler.removeCallbacks(timerRunnable)
+                    txtTimer.visibility = android.view.View.GONE
+                    txtTimer.text = "00:00" 
                     recording = null
 
                     Toast.makeText(
