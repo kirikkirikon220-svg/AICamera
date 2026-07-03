@@ -58,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="@id/previewView"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationX="-120dp"/>
+        android:translationX="-105dp"/>
 
     <View
         android:id="@+id/gridV2"
@@ -70,7 +70,7 @@
         app:layout_constraintBottom_toBottomOf="@id/previewView"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationX="120dp"/>
+        android:translationX="105dp"/>
 
     <View
         android:id="@+id/gridH1"
@@ -82,7 +82,7 @@
         app:layout_constraintBottom_toBottomOf="@id/previewView"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationY="-180dp"/>
+        android:translationY="-160dp"/>
 
     <View
         android:id="@+id/gridH2"
@@ -94,7 +94,7 @@
         app:layout_constraintBottom_toBottomOf="@id/previewView"
         app:layout_constraintStart_toStartOf="@id/previewView"
         app:layout_constraintEnd_toEndOf="@id/previewView"
-        android:translationY="180dp"/>
+        android:translationY="160dp"/>
 
 
     <View
