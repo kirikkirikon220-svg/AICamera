@@ -164,7 +164,9 @@ class MainActivity : AppCompatActivity() {
 
         
 
-        previewView.setOnClickListener { view ->
+        previewView.setOnTouchListener { view, event ->
+
+            if (event.action == android.view.MotionEvent.ACTION_DOWN) {
 
             val factory = SurfaceOrientedMeteringPointFactory(
                 view.width.toFloat(),
@@ -172,8 +174,8 @@ class MainActivity : AppCompatActivity() {
             )
 
             val point = factory.createPoint(
-                view.width / 2f,
-                view.height / 2f
+                event.x,
+                event.y
             )
 
             val action = FocusMeteringAction.Builder(point)
@@ -181,6 +183,9 @@ class MainActivity : AppCompatActivity() {
                 .build()
 
             camera?.cameraControl?.startFocusAndMetering(action)
+            }
+
+            true
         }
 
 
