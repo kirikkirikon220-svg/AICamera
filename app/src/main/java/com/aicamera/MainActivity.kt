@@ -61,7 +61,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         btnSwitchCamera.setOnClickListener {
-            Toast.makeText(this, "Смена камеры (скоро)", Toast.LENGTH_SHORT).show()
+
+            cameraSelector =
+                if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
+                    CameraSelector.DEFAULT_FRONT_CAMERA
+                else
+                    CameraSelector.DEFAULT_BACK_CAMERA
+
+            startCamera()
         }
 
         btnFlash.setOnClickListener {
