@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
     private var isRecording = false
-                    txtTimer.text = "00:00" 
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -267,7 +266,6 @@ class MainActivity : AppCompatActivity() {
             recording?.stop()
             recording = null
             isRecording = false
-                    txtTimer.text = "00:00" 
             return
         }
 
@@ -325,7 +323,6 @@ class MainActivity : AppCompatActivity() {
                 is VideoRecordEvent.Finalize -> {
 
                     isRecording = false
-                    txtTimer.text = "00:00" 
                     recording = null
 
                     Toast.makeText(
