@@ -162,6 +162,28 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        
+
+        previewView.setOnClickListener { view ->
+
+            val factory = SurfaceOrientedMeteringPointFactory(
+                view.width.toFloat(),
+                view.height.toFloat()
+            )
+
+            val point = factory.createPoint(
+                view.width / 2f,
+                view.height / 2f
+            )
+
+            val action = FocusMeteringAction.Builder(point)
+                .setAutoCancelDuration(3, TimeUnit.SECONDS)
+                .build()
+
+            camera?.cameraControl?.startFocusAndMetering(action)
+        }
+
+
         btnSettings.setOnClickListener {
             Toast.makeText(this, "Настройки (скоро)", Toast.LENGTH_SHORT).show()
         }
