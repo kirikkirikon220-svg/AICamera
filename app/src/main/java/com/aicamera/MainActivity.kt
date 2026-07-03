@@ -162,6 +162,19 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Настройки (скоро)", Toast.LENGTH_SHORT).show()
         }
 
+        zoom05.setOnClickListener {
+            camera?.cameraControl?.setZoomRatio(0.5f)
+        }
+
+        zoom1.setOnClickListener {
+            camera?.cameraControl?.setZoomRatio(1.0f)
+        }
+
+        zoom2.setOnClickListener {
+            camera?.cameraControl?.setZoomRatio(2.0f)
+        }
+
+
         modePhoto.setOnClickListener {
 
             videoMode = false
