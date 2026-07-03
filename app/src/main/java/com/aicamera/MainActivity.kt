@@ -2,6 +2,13 @@ package com.aicamera
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
+import android.view.View
+
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -560,7 +567,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-}
+
 
     override fun onResume() {
         super.onResume()
@@ -578,3 +585,5 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
         sensorManager.unregisterListener(horizonListener)
     }
+
+}
