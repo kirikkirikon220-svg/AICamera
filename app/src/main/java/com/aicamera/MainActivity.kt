@@ -26,6 +26,7 @@ import androidx.camera.video.Recorder
 import androidx.camera.video.Recording
 import androidx.camera.video.VideoCapture
 import androidx.camera.video.VideoRecordEvent
+import androidx.camera.video.MediaStoreOutputOptions
 
 import androidx.camera.view.PreviewView
 import androidx.core.app.ActivityCompat
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var imageCapture: ImageCapture
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
+    private var isRecording = false
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -77,7 +79,12 @@ class MainActivity : AppCompatActivity() {
         modeVideo = findViewById(R.id.modeVideo)
 
         btnCapture.setOnClickListener {
-            takePhoto()
+
+            if (videoMode) {
+                recordVideo()
+            } else {
+                takePhoto()
+            }
         }
 
         btnGallery.setOnClickListener {
@@ -128,7 +135,6 @@ class MainActivity : AppCompatActivity() {
             modePhoto.setTextColor(android.graphics.Color.WHITE)
             modeVideo.setTextColor(android.graphics.Color.LTGRAY)
 
-            Toast.makeText(this,"Режим Фото",Toast.LENGTH_SHORT).show()
         }
 
         modeVideo.setOnClickListener {
@@ -138,7 +144,6 @@ class MainActivity : AppCompatActivity() {
             modeVideo.setTextColor(android.graphics.Color.WHITE)
             modePhoto.setTextColor(android.graphics.Color.LTGRAY)
 
-            Toast.makeText(this,"Режим Видео",Toast.LENGTH_SHORT).show()
         }
 
         if (ContextCompat.checkSelfPermission(
@@ -235,4 +240,77 @@ class MainActivity : AppCompatActivity() {
             }
         )
     }
+
+
+    private fun recordVideo() {
+
+        if (recording != null) {
+            recording?.stop()
+            recording = null
+            isRecording = false
+            return
+        }
+
+        val name = "VID_${System.currentTimeMillis()}"
+
+        val contentValues = ContentValues().apply {
+            put(MediaStore.MediaColumns.DISPLAY_NAME, name)
+            put(MediaStore.MediaColumns.MIME_TYPE, "video/mp4")
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(
+                    MediaStore.Video.Media.RELATIVE_PATH,
+                    "Movies/AICamera"
+                )
+            }
+        }
+
+        val outputOptions =
+            MediaStoreOutputOptions.Builder(
+                contentResolver,
+                MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            )
+                .setContentValues(contentValues)
+                .build()
+
+        var pendingRecording =
+            videoCapture.output.prepareRecording(
+                this,
+                outputOptions
+            )
+
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.RECORD_AUDIO
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            pendingRecording =
+                pendingRecording.withAudioEnabled()
+        }
+
+        recording = pendingRecording.start(
+            ContextCompat.getMainExecutor(this)
+        ) { event ->
+
+            when (event) {
+
+                is VideoRecordEvent.Start -> {
+                    isRecording = true
+                }
+
+                is VideoRecordEvent.Finalize -> {
+
+                    isRecording = false
+                    recording = null
+
+                    Toast.makeText(
+                        this,
+                        "Видео сохранено",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+    }
+
 }
