@@ -188,9 +188,13 @@ class MainActivity : AppCompatActivity() {
                 event.y
             )
 
-            val action = FocusMeteringAction.Builder(point)
-                .setAutoCancelDuration(3, TimeUnit.SECONDS)
-                .build()
+            val builder = FocusMeteringAction.Builder(point)
+
+            if (!focusLocked) {
+                builder.setAutoCancelDuration(3, TimeUnit.SECONDS)
+            }
+
+            val action = builder.build()
 
             camera?.cameraControl?.startFocusAndMetering(action)
             }
