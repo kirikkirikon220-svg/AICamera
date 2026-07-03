@@ -351,6 +351,9 @@ class MainActivity : AppCompatActivity() {
             contentValues
         ).build()
 
+        imageCapture.targetRotation =
+            previewView.display.rotation
+
         imageCapture.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(this),
