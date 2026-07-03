@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var modePhoto: TextView
     private lateinit var modeVideo: TextView
     private lateinit var txtTimer: TextView
+    private lateinit var recordDot: TextView
 
     private val timerHandler = android.os.Handler(android.os.Looper.getMainLooper())
     private var seconds = 0
@@ -94,6 +95,8 @@ class MainActivity : AppCompatActivity() {
         modePhoto = findViewById(R.id.modePhoto)
         modeVideo = findViewById(R.id.modeVideo)
         txtTimer = findViewById(R.id.txtTimer)
+        recordDot = findViewById(R.id.recordDot)
+        recordDot.visibility = android.view.View.GONE
         txtTimer.visibility = android.view.View.GONE
 
         btnCapture.setOnClickListener {
