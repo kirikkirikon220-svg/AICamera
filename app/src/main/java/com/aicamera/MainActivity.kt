@@ -2,12 +2,14 @@ package com.aicamera
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.Toast
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.Camera
@@ -16,13 +18,25 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.video.FileOutputOptions
+import androidx.camera.video.PendingRecording
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import androidx.camera.video.Recording
+import androidx.camera.video.VideoCapture
+import androidx.camera.video.VideoRecordEvent
+
 import androidx.camera.view.PreviewView
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var previewView: PreviewView
     private lateinit var imageCapture: ImageCapture
+    private lateinit var videoCapture: VideoCapture<Recorder>
+    private var recording: Recording? = null
 
     private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
     private var camera: Camera? = null
@@ -32,6 +46,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnSwitchCamera: ImageButton
     private lateinit var btnFlash: ImageButton
     private lateinit var btnSettings: ImageButton
+
+    private lateinit var modePhoto: TextView
+    private lateinit var modeVideo: TextView
+
+    private var videoMode = false
 
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
@@ -54,12 +73,21 @@ class MainActivity : AppCompatActivity() {
         btnFlash = findViewById(R.id.btnFlash)
         btnSettings = findViewById(R.id.btnSettings)
 
+        modePhoto = findViewById(R.id.modePhoto)
+        modeVideo = findViewById(R.id.modeVideo)
+
         btnCapture.setOnClickListener {
             takePhoto()
         }
 
         btnGallery.setOnClickListener {
-            Toast.makeText(this, "Галерея (скоро)", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            )
+
+            startActivity(intent)
         }
 
         btnSwitchCamera.setOnClickListener {
@@ -93,6 +121,26 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "Настройки (скоро)", Toast.LENGTH_SHORT).show()
         }
 
+        modePhoto.setOnClickListener {
+
+            videoMode = false
+
+            modePhoto.setTextColor(android.graphics.Color.WHITE)
+            modeVideo.setTextColor(android.graphics.Color.LTGRAY)
+
+            Toast.makeText(this,"Режим Фото",Toast.LENGTH_SHORT).show()
+        }
+
+        modeVideo.setOnClickListener {
+
+            videoMode = true
+
+            modeVideo.setTextColor(android.graphics.Color.WHITE)
+            modePhoto.setTextColor(android.graphics.Color.LTGRAY)
+
+            Toast.makeText(this,"Режим Видео",Toast.LENGTH_SHORT).show()
+        }
+
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
@@ -118,6 +166,12 @@ class MainActivity : AppCompatActivity() {
                 .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
                 .build()
 
+            val recorder = Recorder.Builder()
+                .setQualitySelector(QualitySelector.from(Quality.HD))
+                .build()
+
+            videoCapture = VideoCapture.withOutput(recorder)
+
             preview.surfaceProvider = previewView.surfaceProvider
 
             cameraProvider.unbindAll()
@@ -126,7 +180,8 @@ class MainActivity : AppCompatActivity() {
                 this,
                 cameraSelector,
                 preview,
-                imageCapture
+                imageCapture,
+                videoCapture
             )
 
         }, ContextCompat.getMainExecutor(this))
