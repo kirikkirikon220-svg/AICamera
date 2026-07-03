@@ -176,6 +176,8 @@ class MainActivity : AppCompatActivity() {
 
             if (event.action == android.view.MotionEvent.ACTION_DOWN) {
 
+                downTime = System.currentTimeMillis()
+
             val factory = SurfaceOrientedMeteringPointFactory(
                 view.width.toFloat(),
                 view.height.toFloat()
