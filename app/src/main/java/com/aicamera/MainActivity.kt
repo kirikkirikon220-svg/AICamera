@@ -185,7 +185,6 @@ class MainActivity : AppCompatActivity() {
         btnGallery = findViewById(R.id.btnGallery)
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
-        btnTimer = findViewById(R.id.btnTimer)
         btnSettings = findViewById(R.id.btnSettings)
 
         zoom05 = findViewById(R.id.zoom05)
