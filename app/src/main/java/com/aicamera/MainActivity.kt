@@ -52,7 +52,11 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
+    private val cameraController = CameraController()
+
     private lateinit var previewView: PreviewView
+    private lateinit var photoController: PhotoController
+    private lateinit var cameraEngine: CameraEngine
     private lateinit var imageCapture: ImageCapture
     private lateinit var videoCapture: VideoCapture<Recorder>
     private var recording: Recording? = null
@@ -114,8 +118,6 @@ class MainActivity : AppCompatActivity() {
 
     private var downTime = 0L
 
-    private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-    private var camera: Camera? = null
 
     private lateinit var scaleGestureDetector: ScaleGestureDetector
 
@@ -173,7 +175,7 @@ class MainActivity : AppCompatActivity() {
     private val requestPermission =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
             if (granted) {
-                startCamera()
+                cameraEngine.start()
             }
         }
 
@@ -187,6 +189,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         previewView = findViewById(R.id.previewView)
+
+        cameraEngine = CameraEngine(this, previewView)
+        photoController = PhotoController(this)
 
         btnCapture = findViewById(R.id.btnCapture)
         btnGallery = findViewById(R.id.btnGallery)
@@ -258,10 +263,10 @@ class MainActivity : AppCompatActivity() {
                     override fun onFinish(){
                         txtTimer.visibility = android.view.View.GONE
                         if (captureDelay == 0) {
-                takePhoto()
+                photoController.takePhoto(imageCapture)
             } else {
                 android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                    takePhoto()
+                    photoController.takePhoto(imageCapture)
                 }, (captureDelay * 1000).toLong())
             }
                     }
@@ -274,7 +279,7 @@ class MainActivity : AppCompatActivity() {
             if (videoMode) {
                 recordVideo()
             } else {
-                takePhoto()
+                photoController.takePhoto(imageCapture)
             }
         }
 
@@ -290,13 +295,13 @@ class MainActivity : AppCompatActivity() {
 
         btnSwitchCamera.setOnClickListener {
 
-            cameraSelector =
-                if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
+            cameraController.cameraSelector =
+                if (cameraController.cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA)
                     CameraSelector.DEFAULT_FRONT_CAMERA
                 else
                     CameraSelector.DEFAULT_BACK_CAMERA
 
-            startCamera()
+            cameraEngine.start()
         }
 
         btnFlash.setOnClickListener {
@@ -373,7 +378,7 @@ class MainActivity : AppCompatActivity() {
 
             val action = builder.build()
 
-            camera?.cameraControl?.startFocusAndMetering(action)
+            cameraController.camera?.cameraControl?.startFocusAndMetering(action)
 
             focusRing.postDelayed({
                 focusRing.visibility = android.view.View.GONE
@@ -441,15 +446,15 @@ class MainActivity : AppCompatActivity() {
 
 
         zoom05.setOnClickListener {
-            camera?.cameraControl?.setZoomRatio(0.5f)
+            cameraController.camera?.cameraControl?.setZoomRatio(0.5f)
         }
 
         zoom1.setOnClickListener {
-            camera?.cameraControl?.setZoomRatio(1.0f)
+            cameraController.camera?.cameraControl?.setZoomRatio(1.0f)
         }
 
         zoom2.setOnClickListener {
-            camera?.cameraControl?.setZoomRatio(2.0f)
+            cameraController.camera?.cameraControl?.setZoomRatio(2.0f)
         }
 
 
@@ -485,7 +490,7 @@ class MainActivity : AppCompatActivity() {
             object : ScaleGestureDetector.SimpleOnScaleGestureListener() {
                 override fun onScale(detector: ScaleGestureDetector): Boolean {
 
-                    camera?.cameraInfo?.zoomState?.value?.let { zoom ->
+                    cameraController.camera?.cameraInfo?.zoomState?.value?.let { zoom ->
 
                         val value =
                             (zoom.zoomRatio * detector.scaleFactor)
@@ -494,7 +499,7 @@ class MainActivity : AppCompatActivity() {
                                     zoom.maxZoomRatio
                                 )
 
-                        camera?.cameraControl?.setZoomRatio(value)
+                        cameraController.camera?.cameraControl?.setZoomRatio(value)
                     }
 
                     return true
@@ -508,13 +513,13 @@ class MainActivity : AppCompatActivity() {
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            startCamera()
+            cameraEngine.start()
         } else {
             requestPermission.launch(Manifest.permission.CAMERA)
         }
     }
 
-    private fun startCamera() {
+    private fun cameraEngine.start() {
 
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -540,7 +545,7 @@ class MainActivity : AppCompatActivity() {
 
             camera = cameraProvider.bindToLifecycle(
                 this,
-                cameraSelector,
+                cameraController.cameraSelector,
                 preview,
                 imageCapture,
                 videoCapture
@@ -548,7 +553,7 @@ class MainActivity : AppCompatActivity() {
 
         }, ContextCompat.getMainExecutor(this))
     }
-    private fun takePhoto() {
+    private fun photoController.takePhoto(imageCapture) {
 
         val name =
             "AICamera_${
@@ -688,19 +693,6 @@ class MainActivity : AppCompatActivity() {
                     txtTimer.visibility = android.view.View.GONE
                     recordDot.visibility = android.view.View.GONE
 
-        btnAspect.setOnClickListener {
-
-            aspectIndex = (aspectIndex + 1) % aspectModes.size
-
-            txtAspect.text = aspectModes[aspectIndex]
-
-            Toast.makeText(
-                this,
-                "Формат: ${aspectModes[aspectIndex]}",
-                Toast.LENGTH_SHORT
-            ).show()
-
-        }
                     btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
 
                     Toast.makeText(
