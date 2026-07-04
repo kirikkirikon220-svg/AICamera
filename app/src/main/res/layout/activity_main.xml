@@ -189,18 +189,28 @@
             android:tint="@android:color/white"/>
 
         <TextView
+            android:id="@+id/txtAspect"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="HDR AI"
+            android:text="Full"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:gravity="center"/>
 
         <TextView
+            android:id="@+id/txtHdr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HDR"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"/>
+
+        <TextView
             android:id="@+id/txtResolution"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="14dp"
             android:text="12 MP"
             android:textColor="@android:color/white"/>
 
