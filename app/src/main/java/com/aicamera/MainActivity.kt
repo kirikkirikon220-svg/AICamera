@@ -129,6 +129,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var zoom05: Button
     private lateinit var zoom1: Button
     private lateinit var zoom2: Button
+    private lateinit var zoom3: Button
 
     private lateinit var modePhoto: TextView
     private lateinit var modeVideo: TextView
@@ -190,6 +191,7 @@ class MainActivity : AppCompatActivity() {
         zoom05 = findViewById(R.id.zoom05)
         zoom1 = findViewById(R.id.zoom1)
         zoom2 = findViewById(R.id.zoom2)
+        zoom3 = findViewById(R.id.zoom3)
 
         modePhoto = findViewById(R.id.modePhoto)
         modeVideo = findViewById(R.id.modeVideo)
