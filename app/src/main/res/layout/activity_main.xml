@@ -180,12 +180,12 @@
             android:tint="@android:color/white"/>
 
         <ImageButton
-            android:id="@+id/btnTimer"
+            android:id="@+id/btnFlash"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginStart="12dp"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_lock_idle_alarm"
+            android:src="@android:drawable/ic_menu_camera"
             android:tint="@android:color/white"/>
 
         <TextView
