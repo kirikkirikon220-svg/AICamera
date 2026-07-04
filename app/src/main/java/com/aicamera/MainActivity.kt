@@ -123,8 +123,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnGallery: ImageButton
     private lateinit var btnSwitchCamera: ImageButton
     private lateinit var btnFlash: ImageButton
+    private lateinit var txtFlashMode: TextView
     private lateinit var btnTimer: ImageButton
     private lateinit var btnSettings: ImageButton
+    private lateinit var btnAspect: ImageButton
+    private lateinit var txtAspect: TextView
 
     private lateinit var zoom05: Button
     private lateinit var zoom1: Button
@@ -161,6 +164,9 @@ class MainActivity : AppCompatActivity() {
     private var videoMode = false
     private var captureDelay = 0
 
+    private val aspectModes = listOf("FULL","3:4","9:16","1:1")
+    private var aspectIndex = 1
+
     private var smoothAngle = 0f
     private val timerValues = listOf(0, 3, 5, 10)
 
@@ -186,7 +192,10 @@ class MainActivity : AppCompatActivity() {
         btnGallery = findViewById(R.id.btnGallery)
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
+        txtFlashMode = findViewById(R.id.txtFlashMode)
         btnSettings = findViewById(R.id.btnSettings)
+        btnAspect = findViewById(R.id.btnAspect)
+        txtAspect = findViewById(R.id.txtAspect)
 
         zoom05 = findViewById(R.id.zoom05)
         zoom1 = findViewById(R.id.zoom1)
@@ -206,6 +215,32 @@ class MainActivity : AppCompatActivity() {
         gridH1 = findViewById(R.id.gridH1)
         gridH2 = findViewById(R.id.gridH2)
         recordDot.visibility = android.view.View.GONE
+
+        btnAspect.setOnClickListener {
+
+            aspectIndex = (aspectIndex + 1) % aspectModes.size
+
+            txtAspect.text = aspectModes[aspectIndex]
+
+            val bottomPanel = findViewById<android.view.View>(R.id.bottomPanel)
+
+            if (aspectModes[aspectIndex] == "FULL") {
+                bottomPanel.setBackgroundColor(
+                    android.graphics.Color.parseColor("#66000000")
+                )
+            } else {
+                bottomPanel.setBackgroundColor(
+                    android.graphics.Color.BLACK
+                )
+            }
+
+            Toast.makeText(
+                this,
+                "Формат: ${aspectModes[aspectIndex]}",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
         txtTimer.visibility = android.view.View.GONE
 
         btnCapture.setOnClickListener {
@@ -222,7 +257,13 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onFinish(){
                         txtTimer.visibility = android.view.View.GONE
-                        takePhoto()
+                        if (captureDelay == 0) {
+                takePhoto()
+            } else {
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    takePhoto()
+                }, (captureDelay * 1000).toLong())
+            }
                     }
 
                 }.start()
@@ -260,18 +301,29 @@ class MainActivity : AppCompatActivity() {
 
         btnFlash.setOnClickListener {
 
-            camera?.cameraInfo?.let { info ->
+            flashMode = (flashMode + 1) % 3
 
-                val enabled = info.torchState.value == 1
+            when (flashMode) {
 
-                camera?.cameraControl?.enableTorch(!enabled)
+                0 -> {
+                    imageCapture.flashMode = ImageCapture.FLASH_MODE_AUTO
+                    txtFlashMode.text = "AUTO"
+                    Toast.makeText(this, "Вспышка: Авто", Toast.LENGTH_SHORT).show()
+                }
 
-                Toast.makeText(
-                    this,
-                    if (!enabled) "Вспышка включена" else "Вспышка выключена",
-                    Toast.LENGTH_SHORT
-                ).show()
+                1 -> {
+                    imageCapture.flashMode = ImageCapture.FLASH_MODE_ON
+                    txtFlashMode.text = "ON"
+                    Toast.makeText(this, "Вспышка: Вкл", Toast.LENGTH_SHORT).show()
+                }
+
+                2 -> {
+                    imageCapture.flashMode = ImageCapture.FLASH_MODE_OFF
+                    txtFlashMode.text = "OFF"
+                    Toast.makeText(this, "Вспышка: Выкл", Toast.LENGTH_SHORT).show()
+                }
             }
+        }
         }
 
         
@@ -409,8 +461,11 @@ class MainActivity : AppCompatActivity() {
 
             videoMode = false
 
-            modePhoto.setTextColor(android.graphics.Color.WHITE)
-            modeVideo.setTextColor(android.graphics.Color.LTGRAY)
+            modePhoto.setBackgroundResource(R.drawable.mode_selected)
+            modePhoto.setTextColor(android.graphics.Color.BLACK)
+
+            modeVideo.setBackgroundResource(android.R.color.transparent)
+            modeVideo.setTextColor(android.graphics.Color.WHITE)
 
         }
 
@@ -418,8 +473,11 @@ class MainActivity : AppCompatActivity() {
 
             videoMode = true
 
-            modeVideo.setTextColor(android.graphics.Color.WHITE)
-            modePhoto.setTextColor(android.graphics.Color.LTGRAY)
+            modeVideo.setBackgroundResource(R.drawable.mode_selected)
+            modeVideo.setTextColor(android.graphics.Color.BLACK)
+
+            modePhoto.setBackgroundResource(android.R.color.transparent)
+            modePhoto.setTextColor(android.graphics.Color.WHITE)
 
         }
 
@@ -629,6 +687,20 @@ class MainActivity : AppCompatActivity() {
                     txtTimer.text = "00:00"
                     txtTimer.visibility = android.view.View.GONE
                     recordDot.visibility = android.view.View.GONE
+
+        btnAspect.setOnClickListener {
+
+            aspectIndex = (aspectIndex + 1) % aspectModes.size
+
+            txtAspect.text = aspectModes[aspectIndex]
+
+            Toast.makeText(
+                this,
+                "Формат: ${aspectModes[aspectIndex]}",
+                Toast.LENGTH_SHORT
+            ).show()
+
+        }
                     btnCapture.setImageResource(android.R.drawable.ic_menu_camera)
 
                     Toast.makeText(

@@ -173,9 +173,9 @@
 
         <ImageButton
             android:id="@+id/btnSettings"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@android:color/transparent"
+            android:layout_width="42dp"
+            android:layout_height="42dp"
+            android:background="@drawable/top_button_bg"
             android:src="@android:drawable/ic_menu_preferences"
             android:tint="@android:color/white"/>
 
@@ -227,17 +227,44 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
 
             <TextView
                 android:id="@+id/modePortrait"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ПОРТРЕТ"
+                android:textColor="#BBBBBB"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/modeMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ЕЩЁ"
+                android:textColor="#BBBBBB"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="24dp"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:id="@+id/modePro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PRO"
                 android:textColor="#BBBBBB"
                 android:textSize="16sp"/>
 
@@ -265,12 +292,18 @@
 
             <TextView
                 android:id="@+id/modeVideo"
+                android:paddingStart="14dp"
+                android:paddingEnd="14dp"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="ВИДЕО"
                 android:textColor="#BBBBBB"
                 android:textSize="16sp"/>
         </LinearLayout>
+
+        </HorizontalScrollView>
 
         
         <LinearLayout
@@ -308,8 +341,10 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/bottomPanel"
             android:layout_width="match_parent"
-            android:layout_height="80dp">
+            android:layout_height="80dp"
+            android:background="#66000000">
 
             <ImageButton
                 android:id="@+id/btnGallery"
@@ -324,9 +359,9 @@
 
             <ImageButton
                 android:id="@+id/btnCapture"
-                android:layout_width="72dp"
-                android:layout_height="86dp"
-                android:background="@android:drawable/btn_default"
+                android:layout_width="82dp"
+                android:layout_height="82dp"
+                android:background="@drawable/shutter_samsung"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
