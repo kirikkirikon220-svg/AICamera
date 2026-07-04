@@ -298,6 +298,12 @@
                 android:layout_height="36dp"
                 android:text="2x"/>
 
+            <Button
+                android:id="@+id/zoom3"
+                android:layout_width="48dp"
+                android:layout_height="36dp"
+                android:text="3x"/>
+
         </LinearLayout>
 
 
