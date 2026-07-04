@@ -13,6 +13,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.widget.ImageButton
 import android.widget.Toast
@@ -74,20 +75,24 @@ class MainActivity : AppCompatActivity() {
                 kotlin.math.atan2(x.toDouble(), y.toDouble())
             ).toFloat()
 
-            horizonLine.animate().rotation(-angle).setDuration(80).start()
+            smoothAngle += (-angle - smoothAngle) * 0.15f
+            horizonLine.rotation = smoothAngle
 
             if (kotlin.math.abs(angle) < 15f) {
 
                 if (horizonLine.visibility != View.VISIBLE) {
                     horizonLine.alpha = 0f
                     horizonLine.visibility = View.VISIBLE
+                horizonCenter.visibility = View.VISIBLE
                     horizonLine.animate().alpha(1f).setDuration(150).start()
                 }
 
                 if (kotlin.math.abs(angle) < 1f) {
                     horizonLine.setBackgroundColor(android.graphics.Color.parseColor("#FFD54F"))
+                    horizonCenter.setBackgroundColor(android.graphics.Color.parseColor("#FFD54F"))
                 } else {
                     horizonLine.setBackgroundColor(android.graphics.Color.WHITE)
+                    horizonCenter.setBackgroundColor(android.graphics.Color.WHITE)
                 }
 
             } else {
@@ -97,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                         .setDuration(150)
                         .withEndAction {
                             horizonLine.visibility = View.GONE
+                            horizonCenter.visibility = View.GONE
                         }
                         .start()
                 }
@@ -117,6 +123,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnGallery: ImageButton
     private lateinit var btnSwitchCamera: ImageButton
     private lateinit var btnFlash: ImageButton
+    private lateinit var btnTimer: ImageButton
     private lateinit var btnSettings: ImageButton
 
     private lateinit var zoom05: Button
@@ -129,6 +136,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recordDot: TextView
     private lateinit var focusRing: android.view.View
     private lateinit var horizonLine: android.view.View
+    private lateinit var horizonCenter: android.view.View
     private lateinit var gridV1: android.view.View
     private lateinit var gridV2: android.view.View
     private lateinit var gridH1: android.view.View
@@ -151,6 +159,8 @@ class MainActivity : AppCompatActivity() {
 
     private var videoMode = false
     private var captureDelay = 0
+
+    private var smoothAngle = 0f
     private val timerValues = listOf(0, 3, 5, 10)
 
     private val requestPermission =
@@ -175,6 +185,7 @@ class MainActivity : AppCompatActivity() {
         btnGallery = findViewById(R.id.btnGallery)
         btnSwitchCamera = findViewById(R.id.btnSwitchCamera)
         btnFlash = findViewById(R.id.btnFlash)
+        btnTimer = findViewById(R.id.btnTimer)
         btnSettings = findViewById(R.id.btnSettings)
 
         zoom05 = findViewById(R.id.zoom05)
@@ -187,6 +198,7 @@ class MainActivity : AppCompatActivity() {
         recordDot = findViewById(R.id.recordDot)
         focusRing = findViewById(R.id.focusRing)
         horizonLine = findViewById(R.id.horizonLine)
+        horizonCenter = findViewById(R.id.horizonCenter)
 
         gridV1 = findViewById(R.id.gridV1)
         gridV2 = findViewById(R.id.gridV2)
@@ -196,6 +208,26 @@ class MainActivity : AppCompatActivity() {
         txtTimer.visibility = android.view.View.GONE
 
         btnCapture.setOnClickListener {
+
+            if (!videoMode && captureDelay > 0) {
+
+                txtTimer.visibility = android.view.View.VISIBLE
+
+                object : CountDownTimer((captureDelay * 1000).toLong(),1000){
+
+                    override fun onTick(ms: Long){
+                        txtTimer.text = "${ms / 1000 + 1}"
+                    }
+
+                    override fun onFinish(){
+                        txtTimer.visibility = android.view.View.GONE
+                        takePhoto()
+                    }
+
+                }.start()
+
+                return@setOnClickListener
+            }
 
             if (videoMode) {
                 recordVideo()
@@ -338,6 +370,22 @@ class MainActivity : AppCompatActivity() {
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+        btnTimer.setOnClickListener {
+
+            val index = timerValues.indexOf(captureDelay)
+            captureDelay = timerValues[(index + 1) % timerValues.size]
+
+            Toast.makeText(
+                this,
+                if (captureDelay == 0)
+                    "Таймер выключен"
+                else
+                    "Таймер ${captureDelay} сек",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
 
         zoom05.setOnClickListener {
             camera?.cameraControl?.setZoomRatio(0.5f)
